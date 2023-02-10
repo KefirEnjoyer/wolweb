@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strconv"
 )
 
@@ -58,5 +61,40 @@ func getData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(appData)
 	log.Printf("Request for Application data served")
+
+}
+
+func ping(device Device, ch chan<- Device) {
+
+	_, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
+	if err != nil {
+		ch <- Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+	} else {
+		ch <- Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+	}
+
+}
+func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
+
+	var result AppData
+	ch := make(chan Device)
+	for _, device := range appData.Devices {
+		go ping(device, ch)
+	}
+	for range appData.Devices {
+		result.Devices = append(result.Devices, <-ch)
+	}
+	log.Print(result)
+	jsonData, err := json.Marshal(result)
+	if err != nil {
+		log.Fatal(err)
+	}
+	// write the JSON data to a file
+	err = ioutil.WriteFile("devices.json", jsonData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	loadData()
+	fmt.Fprintf(w, "data Refreshed!")
 
 }

@@ -2,7 +2,6 @@ version: "3"
 services:
   wolweb:
     build: .
-    image: wolweb:latest
     container_name: wolweb
     
     # make sure that the file exists in local directory from where you are running the compose file
@@ -17,7 +16,7 @@ services:
     network_mode: host
 
     # Use environment variable below to change port or virtual directory.
-    #environment:
-      #WOLWEBPORT: "8089"
+    environment:
+      WOLWEBPORT: "8091"
       #WOLWEBVDIR: "/wolweb"
       #WOLWEBBCASTIP: "192.168.1.255:9"

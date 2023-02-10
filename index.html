@@ -9,57 +9,36 @@
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
   <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
   <link rel="stylesheet" href="static/wolweb.css">
+  <link rel="shortcut icon" href="static/logo.png">
 </head>
-
 <body>
+  <div class="pl-2 pt-2 pb-1 d-flex justify-content-start" style="background-color: rgb(0, 0, 0);margin: 0;">
+    <img style="height: 45px;" src="static/logo.png" alt="3deling logo">
+    <h3 class="ml-2 mt-2 text-center text-white" style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Wake-on-LAN</h3>
+  </div>
   <div class="container-fluid">
+   
     <div class="row">
       <div class="col-12" role="main">
-        <h1 class="mb-4 mt-4"><span class="fas fa-power-off"></span> Wake-on-Lan Web Interface<small></h1>
+        
+        <div class="mt-4 mb-4 d-flex justify-content-center">
+          <img src="static/logo2.png" alt="logo">
+          <!--
+          <img style="height: 65px;" src="static/img/logo.jpeg" alt="">
+          <h1 class="ml-3 mt-3 text-center">Wake-On-Lan Web Interface</h1>
+          -->
+        </div>
         <div id="snackbar" class="alert hideMe">
           Message comes here
         </div>
-        <div id="GridDevices"></div>
+        <div class="d-flex justify-content-center">
+          <div id="GridDevices">
+          </div>
+        </div>
         <hr>
-        <p>
-        <h3>Wake-up directly using HTTP Request</h3>
-        <b>{{$.VDir}}/wake/<span class="text-info">&lt;DeviceName&gt;</span></b>
-
-        <b>Returns a JSON Object</b>
-        <p>
-        <pre>
-{
-  "success":true,
-  "message":"Sent magic packet to device Server with Mac 34:E6:D7:33:12:71 on Broadcast IP 192.168.1.255:9",
-  "error":null
-}
-        </pre>
-        </p>
-        <dl class="dl-horizontal">
-          <dt>success</dt>
-          <dd>True or False if the WakeOnLan packet was send</dd>
-          <dt>message</dt>
-          <dd>Message as string what happen</dd>
-          <dt>error</dt>
-          <dd>Encoded Jsonobject from GOLANG Error Object</dd>
-        </dl>
-        </p>
-        <hr>
-        <p>
-          <i class="fab fa-github"></i> Project Page: <a
-            href="https://github.com/sameerdhoot/wolweb">https://github.com/sameerdhoot/wolweb</a>
-        </p>
-        <p class="m-0">
-          <small>Build with <span class="fa fa-heart text-danger" aria-hidden="true"></span> by Sameer Dhoot, <span
-              class="fab fa-github"></span> <a href="https://github.com/sameerdhoot">https://github.com/sameerdhoot</a></small>
-        </p>
-        <p class="m-0">
-          <small class="ml-2"><i class="fas fa-code-branch m-1"></i> from David Baumann's project <a href="https://github.com/dabondi/go-rest-wol">https://github.com/dabondi/go-rest-wol</a></small>
-        </p>
       </div>
     </div>
   </div>
-
   <script>
     window.vDir = "{{$.VDir}}"
     window.bCastIP = "{{$.BCastIP}}"
@@ -69,6 +48,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
   <script src="static/wolweb.js"></script>
+  <script src="https://kit.fontawesome.com/fcd4197439.js" crossorigin="anonymous"></script>
 
 </body>
 

@@ -71,16 +71,19 @@ You can override the default application configuration by using a config file or
 {
     "devices": [
         {
+            "connection": "on",
             "name": "Server",
             "mac": "34:E6:D7:33:12:71",
             "ip": "192.168.1.255:9"
         },
         {
+            "connection": "on",
             "name": "NAS",
             "mac": "28:C6:8E:36:DC:38",
             "ip": "192.168.1.255:9"
         },
         {
+            "connection": "off",
             "name": "Laptop",
             "mac": "18:1D:EA:70:A0:21",
             "ip": "192.168.1.255:9"

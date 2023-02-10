@@ -36,7 +36,7 @@ func setWorkingDir() {
 		log.Fatalf("Error determining the directory. \"%s\"", err)
 	}
 	appPath := filepath.Dir(thisApp)
-	os.Chdir(appPath)
+	os.Chdir("/home/komar/go/src/github.com/KomarK0X/wolweb")
 	log.Printf("Set working directory: %s", appPath)
 
 }
@@ -76,6 +76,9 @@ func setupWebServer() {
 
 	// Define Data save Api function
 	router.HandleFunc(basePath+"/data/save", saveData).Methods("POST")
+
+	// updating connections
+	router.HandleFunc(basePath+"/data/update", updateConnectionsData).Methods("GET")
 
 	// Define Data get Api function
 	router.HandleFunc(basePath+"/data/get", getData).Methods("GET")

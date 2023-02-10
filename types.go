@@ -9,9 +9,11 @@ type HTTPResponseObject struct {
 
 // Device represents a Computer Object
 type Device struct {
+	Connection  string `json:"connection"`
 	Name        string `json:"name"`
 	Mac         string `json:"mac"`
 	BroadcastIP string `json:"ip"`
+	AddressIP   string `json:"address"`
 }
 
 // AppData is list of Computer objects defined in JSON config file
