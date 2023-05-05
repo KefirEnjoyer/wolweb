@@ -154,7 +154,7 @@ function renderData() {
 
     $("#GridDevices").jsGrid({
         height: "auto",
-        width: "850px",
+        width: "auto",
         updateOnResize: true,
         editing: true,
         inserting: false,
