@@ -1,8 +1,8 @@
 {
     "devices": [
         {
-            "address": "192.168.1.x",
-            "name": "Server",
+            "address": "192.168.1.1",
+            "name": "Servera",
             "mac": "34:E6:D7:33:12:71",
             "ip": "192.168.1.255:9"
         }
