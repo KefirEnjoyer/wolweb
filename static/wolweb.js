@@ -153,7 +153,7 @@ function renderData() {
     });
 
     $("#GridDevices").jsGrid({
-        width: "850px",
+        width: gridWidth,
         height: "auto",
         updateOnResize: true,
         editing: true,
