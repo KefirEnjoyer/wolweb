@@ -110,7 +110,8 @@ function renderData() {
 
     var gridFields = [];
     var gridWidth = "850px";
-        gridFields.push({ name: "address", title: "addressIP" , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." } });
+        gridFields.push({ name: "address", title: "address 
+                         IP" , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." } });
         gridFields.push({ name: "name", title: "Device Name", type: "text", width: 150, validate: { validator: "required", message: "Device name is a required field." } });
         gridFields.push({ name: "mac", title: "MAC Address", type: "text", width: 150, validate: { validator: "pattern", param: /^[0-9a-f]{1,2}([\.:-])(?:[0-9a-f]{1,2}\1){4}[0-9a-f]{1,2}$/gmi, message: "MAC Address is a required field." } });
         gridFields.push({
