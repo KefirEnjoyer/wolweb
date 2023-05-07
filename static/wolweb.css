@@ -20,7 +20,6 @@
 .hideMe {
     display: none;
 }
-#GridDevices{
-    width: 850px!important;
-    margin: auto!important;
+.d-flex justify-content-center{
+    width: 100%;
 }
