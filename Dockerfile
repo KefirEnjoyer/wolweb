@@ -25,7 +25,7 @@ COPY --from=builder /wolweb/devices.json .
 COPY --from=builder /wolweb/config.json .
 COPY --from=builder /wolweb/static ./static
 
-ARG WOLWEBPORT=8089
+ARG WOLWEBPORT=8091
 
 CMD ["/wolweb/wolweb"]
 
