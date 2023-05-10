@@ -95,4 +95,5 @@ func updateConnectionsData() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	//getData()
 }

@@ -104,6 +104,11 @@ function renderData() {
             });
         },
 
+        getSorting: function(){
+            address,      // the name of the field by which grid is sorted
+            asc       // 'asc' or 'desc' depending on sort order
+        }
+
     });
 
     jsGrid.fields.bscontrol = BSControl;
@@ -160,7 +165,7 @@ function renderData() {
         updateOnResize: true,
         editing: true,
         inserting: false,
-        sorting: false,
+        sorting: getSorting,
         confirmDeleting: true,
         deleteConfirm: "Are you sure you want to delete this Device?",
         data: appData.devices,
@@ -170,7 +175,8 @@ function renderData() {
         },
         onItemInserted: saveInsertedData,
         onItemDeleted: saveAppData,
-        onItemUpdated: saveAppData
+        onItemUpdated: saveAppData,
+        
     });
 
 }
