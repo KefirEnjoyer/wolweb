@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -65,35 +67,53 @@ func getData(w http.ResponseWriter, r *http.Request) {
 func ping(device Device, ch chan<- Device) {
 	out, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
 	if err != nil {
-
-		ch <- Device{Connection: false, AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+		ch <- Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
 		return
 	}
 	if strings.Contains(string(out), "1 received") {
-		ch <- Device{Connection: false, AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+		ch <- Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
 	}
 }
-func updateConnectionsData() {
-	var results AppData
+func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
+	var result AppData
 	ch := make(chan Device)
 	for _, device := range appData.Devices {
 		go ping(device, ch)
 	}
 	for range appData.Devices {
-		results.Devices = append(appData.Devices, <-ch)
+		result.Devices = append(result.Devices, <-ch)
 	}
-	jsonData, err := json.Marshal(results)
+	fmt.Print(appData.Devices)
+	jsonData, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	file, err := os.OpenFile("devices.json", os.O_WRONLY|os.O_TRUNC, 0644)
+	// write the JSON data to a file
+	err = ioutil.WriteFile("devices.json", jsonData, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
-	_, err = file.Write(jsonData)
-	if err != nil {
-		log.Fatal(err)
-	}
-	//getData()
+	loadData()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost {
+			// handle form submission
+			// ...
+			// redirect to the same page to refresh it
+			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
+			return
+		}
+
+		// serve the initial page
+		// ...
+	})
+	fmt.Print("refreshed")
+
+	fmt.Fprintf(w, "Hello from backend Go!")
+
+	//w.Header().Set("Content-Type", "application/json")
+	//err = json.NewEncoder(w).Encode(result)
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
 }

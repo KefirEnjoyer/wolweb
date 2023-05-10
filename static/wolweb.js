@@ -104,20 +104,31 @@ function renderData() {
             });
         },
 
-        getSorting: function(){
-            address,      // the name of the field by which grid is sorted
-            asc       // 'asc' or 'desc' depending on sort order
-        }
 
     });
 
     jsGrid.fields.bscontrol = BSControl;
 
     var gridFields = [];
-    var gridWidth = "850px";
-        gridFields.push({ name: "address", title: "IP address " , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." } });
-        
-        gridFields.push({ name: "address", title: "IP address " , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." } });
+    var gridWidth = "930px";
+        gridFields.push({ name: "connection", title: "ON/OFF" , type: "text", width: 80, align: "center",
+            headerTemplate: function () {
+                var grid = this._grid;
+                var isInserting = grid.inserting;
+                var $button = $("<button>").addClass("btn btn-info btn-sm device-insert-button")
+                    .attr({ type: "button", title: "Refresh" })
+                    .html("<i class=\"bi bi-arrow-clockwise\"></i>Refresh")
+                    .on("click", function () {
+                        updateConnectionData().then(result=>{
+                            
+                        })
+                            alert('success')
+                            getAppData()
+                    });
+                return $button;
+            }
+        });
+        gridFields.push({ name: "address", title: "IP address " , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." },sorting: true });
         gridFields.push({ name: "name", title: "Device Name", type: "text", width: 150, validate: { validator: "required", message: "Device name is a required field." } });
         gridFields.push({ name: "mac", title: "MAC Address", type: "text", width: 150, validate: { validator: "pattern", param: /^[0-9a-f]{1,2}([\.:-])(?:[0-9a-f]{1,2}\1){4}[0-9a-f]{1,2}$/gmi, message: "MAC Address is a required field." } });
         gridFields.push({
@@ -160,12 +171,12 @@ function renderData() {
     });
 
     $("#GridDevices").jsGrid({
-        width: "850px",
+        width: "950px",
         height: "auto",
         updateOnResize: true,
         editing: true,
         inserting: false,
-        sorting: getSorting,
+        sorting: true,
         confirmDeleting: true,
         deleteConfirm: "Are you sure you want to delete this Device?",
         data: appData.devices,
@@ -178,7 +189,6 @@ function renderData() {
         onItemUpdated: saveAppData,
         
     });
-
 }
 
 function saveAppData() {
@@ -200,6 +210,20 @@ function saveAppData() {
 
 }
 
+function updateConnectionData() {
+    $.ajax({
+        type: "GET",
+        url: (vDir == "/" ? "" : vDir) + "/data/update",
+        success: function(data) {
+            getAppData()
+            alert(data)
+        },
+        error: function() {
+            console.log("Error something went wrong.");
+        }
+    })
+    
+}
 function saveInsertedData() {
 
     saveAppData();
