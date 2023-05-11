@@ -64,7 +64,7 @@ function renderData() {
             var grid = this._grid;
             return $("<button>").addClass("btn btn-dark btn-sm")
                 .attr({ type: "button", title: "Add this device to the list." })
-                .html("<i class=\"fas fa-save\"></i>SAVE")
+                .html("<i class=\"fa-solid fa-pen-to-square\" style=\"color: #70ff73;\"></i>SAVE")
                 .on("click", function () {
                     grid.insertItem().done(function () {
                         grid.clearInsert();
@@ -82,15 +82,14 @@ function renderData() {
 
         _createDeleteButton: function (item) {
             var grid = this._grid;
-            return $("<button class=\"btn btn-sm btn-light m-0 ml-1 p-1\" title=\"" + this.deleteButtonTooltip + "\">").append("<i class=\"fas fa-trash-alt bs-grid-button text-danger m-0 p-0\">").click(function (e) {
+            return $("<button class=\"btn btn-sm btn-light m-0 ml-1 p-1\" title=\"" + this.deleteButtonTooltip + "\">").append("<i class=\"fas fa-trash-alt bs-grid-button text-danger m-0 p-0\" style=\"color: #70ff73;\">").click(function (e) {
                 grid.deleteItem(item);
                 e.stopPropagation();
             });
         },
-
         _createUpdateButton: function () {
             var grid = this._grid;
-            return $("<button class=\"btn btn-sm btn-light m-0 ml-1 p-1\" title=\"" + this.updateButtonTooltip + "\">").append("<i class=\"fas fa-save bs-grid-button text-success m-0 p-0\">").click(function (e) {
+            return $("<button class=\"btn btn-sm btn-light m-0 ml-1 p-1\" title=\"" + this.updateButtonTooltip + "\" ></button").append("<i class=\"fas fa-save bs-grid-button text-success m-0 p-0\">").click(function (e) {
                 grid.updateItem();
                 e.stopPropagation();
             });
@@ -110,25 +109,45 @@ function renderData() {
     jsGrid.fields.bscontrol = BSControl;
 
     var gridFields = [];
-    var gridWidth = "930px";
-        gridFields.push({ name: "connection", title: "ON/OFF" , type: "text", width: 80, align: "center",
+    var gridWidth = "970px";
+        gridFields.push({ name: "connection", title: "ON/OFF" , type: "text", width: 120, align: "center",
             headerTemplate: function () {
                 var grid = this._grid;
                 var isInserting = grid.inserting;
-                var $button = $("<button>").addClass("btn btn-info btn-sm device-insert-button")
-                    .attr({ type: "button", title: "Refresh" })
-                    .html("<i class=\"bi bi-arrow-clockwise\"></i>Refresh")
-                    .on("click", function () {
-                        updateConnectionData().then(result=>{
-                            
-                        })
-                            alert('success')
-                            getAppData()
-                    });
+                var $button = $("<button>").addClass("btn btn-info btn-sm device-refresh-button")
+                .attr({ type: "button", title: "Add new Device" })
+                .html("<i class=\"fa-solid fa-arrows-rotate\" style=\"color: #ffffff;\"></i> Refresh")
+                .on("click", function () {
+                    updateConnectionData()
+                    $button.html("<i class=\"fa-solid fa-arrows-rotate fa-spin fa-spin-reverse\"></i>")
+                });
                 return $button;
+            },itemTemplate: function(value, item){
+                if(value=="on"){
+                    return "<i class=\"fa-solid fa-power-off fa-xl\" style=\"color: #43c77c;\"></i>"
+                }
+                else{
+                    return "<i class=\"fa-solid fa-power-off fa-xl\" style=\"color: #e74040;\"></i>"
+                }
             }
         });
-        gridFields.push({ name: "address", title: "IP address " , type: "text", width: 150, validate: { validator: "required", message: "address IP is a required field." },sorting: true });
+        gridFields.push({ name: "address", title: "IP address " , type: "string", width: 150, validate: { validator: "required", message: "address IP is a required field." }, sorter: function(a, b) {
+            // Convert IP address strings to arrays of numeric components
+            const aComponents = a.split(".").map(function(component) { return parseInt(component, 10); });
+            const bComponents = b.split(".").map(function(component) { return parseInt(component, 10); });
+  
+            // Compare each component of the IP addresses numerically
+            for (var i = 0; i < 4; i++) {
+                if (aComponents[i] < bComponents[i]) {
+                    return -1;
+                } else if (aComponents[i] > bComponents[i]) {
+                    return 1;
+                }
+            }
+            // If all components are equal, the IP addresses are equal
+            return 0;
+            }
+          });
         gridFields.push({ name: "name", title: "Device Name", type: "text", width: 150, validate: { validator: "required", message: "Device name is a required field." } });
         gridFields.push({ name: "mac", title: "MAC Address", type: "text", width: 150, validate: { validator: "pattern", param: /^[0-9a-f]{1,2}([\.:-])(?:[0-9a-f]{1,2}\1){4}[0-9a-f]{1,2}$/gmi, message: "MAC Address is a required field." } });
         gridFields.push({
@@ -149,6 +168,7 @@ function renderData() {
                 .html("<i class=\"fas fa-bolt\"></i>WAKE-UP")
                 .on("click", function () {
                     $.wakeUpDeviceByName(item.name)
+                    $(".fa-solid fa-power-off fa-xl").css("color", "orange");
                 });
         },
         editTemplate: function (value, item) { return "" },
@@ -161,7 +181,7 @@ function renderData() {
             var isInserting = grid.inserting;
             var $button = $("<button>").addClass("btn btn-info btn-sm device-insert-button")
                 .attr({ type: "button", title: "Add new Device" })
-                .html("<i class=\"fas fa-plus\"></i>NEW")
+                .html("<i class=\"fa-solid fa-plus\" style=\"color: #ffffff;\"></i> New")
                 .on("click", function () {
                     isInserting = !isInserting;
                     grid.option("inserting", isInserting);
@@ -171,8 +191,9 @@ function renderData() {
     });
 
     $("#GridDevices").jsGrid({
-        width: "950px",
+        width: "970px",
         height: "auto",
+        
         updateOnResize: true,
         editing: true,
         inserting: false,
@@ -216,7 +237,6 @@ function updateConnectionData() {
         url: (vDir == "/" ? "" : vDir) + "/data/update",
         success: function(data) {
             getAppData()
-            alert(data)
         },
         error: function() {
             console.log("Error something went wrong.");

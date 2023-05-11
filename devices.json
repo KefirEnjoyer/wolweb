@@ -1,1 +1,16 @@
-{"devices":[{"connection":"on","name":"numero uno","mac":"34:E6:D7:33:12:71","ip":"192.168.1.255:9","address":"192.168.1.1"},{"connection":"off","name":"numero trio","mac":"34:E6:D7:33:12:71","ip":"192.168.1.255:9","address":"192.168.1.3"},{"connection":"off","name":"numero senco","mac":"34:E6:D7:33:12:71","ip":"192.168.1.255:9","address":"192.168.1.2"}]}
+{
+    "devices": [
+        {
+            "name": "Servera",
+            "mac": "34:E6:D7:33:12:71",
+            "ip": "192.168.1.255:9",
+            "address": "192.169.11.12"
+        },
+        {
+            "name": "Servera",
+            "mac": "34:E6:D7:33:12:71",
+            "ip": "192.168.1.255:9",
+            "address": "192.169.11.11"
+        }
+    ]
+}

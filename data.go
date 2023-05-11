@@ -83,7 +83,6 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 	for range appData.Devices {
 		result.Devices = append(result.Devices, <-ch)
 	}
-	fmt.Print(appData.Devices)
 	jsonData, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal(err)
@@ -94,26 +93,5 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	loadData()
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
-			// handle form submission
-			// ...
-			// redirect to the same page to refresh it
-			http.Redirect(w, r, r.URL.Path, http.StatusSeeOther)
-			return
-		}
-
-		// serve the initial page
-		// ...
-	})
-	fmt.Print("refreshed")
-
-	fmt.Fprintf(w, "Hello from backend Go!")
-
-	//w.Header().Set("Content-Type", "application/json")
-	//err = json.NewEncoder(w).Encode(result)
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
+	fmt.Fprintf(w, "data Refreshed!")
 }
