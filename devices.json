@@ -1,16 +1,25 @@
 {
     "devices": [
         {
-            "name": "Servera",
+            "connection": "on",
+            "name": "numero uno uno",
             "mac": "34:E6:D7:33:12:71",
             "ip": "192.168.1.255:9",
-            "address": "192.169.11.12"
+            "address": "192.168.1.1"
         },
         {
-            "name": "Servera",
+            "connection": "",
+            "name": "numero due",
             "mac": "34:E6:D7:33:12:71",
             "ip": "192.168.1.255:9",
-            "address": "192.169.11.11"
+            "address": "192.168.1.2"
+        },
+        {
+            "connection": "off",
+            "name": "numero tre",
+            "mac": "34:E6:D7:33:12:71",
+            "ip": "192.168.1.255:9",
+            "address": "192.169.1.12"
         }
     ]
 }

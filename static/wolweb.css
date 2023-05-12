@@ -1,3 +1,6 @@
+:root {
+    --orange: #f03e24;
+  }
 .fas {
     margin-right: 10px;
 }
@@ -23,3 +26,7 @@
 .d-flex justify-content-center{
     width: 100%;
 }
+.bg-orange {
+    background-color: #f03e24
+}
+
