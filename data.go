@@ -75,14 +75,17 @@ func ping(device Device, ch chan<- Device) {
 	}
 }
 func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
+	fmt.Print("updateConnectionsData started")
 	var result AppData
 	ch := make(chan Device)
 	for _, device := range appData.Devices {
 		go ping(device, ch)
 	}
 	for range appData.Devices {
+		fmt.Print(<-ch)
 		result.Devices = append(result.Devices, <-ch)
 	}
+	fmt.Print(result)
 	jsonData, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal(err)
@@ -94,4 +97,5 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 	}
 	loadData()
 	fmt.Fprintf(w, "data Refreshed!")
+
 }
