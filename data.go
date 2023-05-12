@@ -98,4 +98,7 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 	loadData()
 	fmt.Fprintf(w, "data Refreshed!")
 
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+	log.Printf("data Refreshed!")
 }
