@@ -4,10 +4,13 @@ FROM golang:1.14-alpine AS builder
 RUN mkdir /wolweb
 WORKDIR /wolweb
 
+LABEL org.label-schema.vcs-url="https://github.com/komarK0X/wolweb" \
+      org.label-schema.url="https://github.com/komarK0X/wolweb/blob/master/README.md"
+
 # Install Dependecies
 RUN apk update && apk upgrade && \
     apk add --no-cache git && \
-    git clone -b rebuild https://github.com/komarK0X/wolweb . && \
+    cp /home/komar/go/src/github.com/KomarK0X/wolweb . && \
     go mod init wolweb && \
     go get -d github.com/gorilla/handlers && \
     go get -d github.com/gorilla/mux && \
