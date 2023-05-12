@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -30,15 +31,14 @@ func main() {
 
 func setWorkingDir() {
 
-	//thisApp, err := os.Executable()
-	//if err != nil {
-	//	log.Fatalf("Error determining the directory. \"%s\"", err)
-	//}
-	//appPath := filepath.Dir(thisApp)
-	//os.Chdir(appPath)
-	//log.Printf("Set working directory: %s", appPath)
-	os.Chdir("/home/komar/go/src/github.com/KomarK0X/wolweb")
-	log.Printf("Set working directory: %s", "/home/komar/go/src/github.com/KomarK0X/wolweb")
+	thisApp, err := os.Executable()
+	if err != nil {
+		log.Fatalf("Error determining the directory. \"%s\"", err)
+	}
+	appPath := filepath.Dir(thisApp)
+	os.Chdir(appPath)
+	log.Printf("Set working directory: %s", appPath)
+
 }
 
 func loadConfig() {
