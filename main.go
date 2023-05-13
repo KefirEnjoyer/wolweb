@@ -36,7 +36,7 @@ func setWorkingDir() {
 		log.Fatalf("Error determining the directory. \"%s\"", err)
 	}
 	appPath := filepath.Dir(thisApp)
-	os.Chdir(appPath)
+	os.Chdir("/home/komar/go/src/github.com/KomarK0X/wolweb")
 	log.Printf("Set working directory: %s", appPath)
 
 }

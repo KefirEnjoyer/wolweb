@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -75,7 +75,17 @@ func ping(device Device, ch chan<- Device) {
 	}
 }
 func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
-	fmt.Print("updateConnectionsData started")
+	log.Printf("updateConnectionsData started")
+
+	ip := "192.168.1.1"
+	conn, err := net.Dial("ip4:icmp", ip)
+	if err != nil {
+		log.Println("Could not connect to host 192.168.1.1:", err)
+		os.Exit(1)
+	}
+	defer conn.Close()
+	log.Println("Connection successful!")
+
 	var result AppData
 	ch := make(chan Device)
 	for _, device := range appData.Devices {
@@ -85,19 +95,18 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(<-ch)
 		result.Devices = append(result.Devices, <-ch)
 	}
-	fmt.Print(result)
-	jsonData, err := json.Marshal(result)
-	if err != nil {
-		log.Fatal(err)
-	}
+	log.Print(result)
+	//jsonData, err := json.Marshal(result)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
 	// write the JSON data to a file
-	err = ioutil.WriteFile("devices.json", jsonData, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	loadData()
-	fmt.Fprintf(w, "data Refreshed!")
-
+	//err = ioutil.WriteFile("devices.json", jsonData, 0644)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//loadData()
+	//fmt.Fprintf(w, "data Refreshed!")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(result)
 	log.Printf("data Refreshed!")
