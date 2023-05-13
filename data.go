@@ -57,6 +57,7 @@ func saveData(w http.ResponseWriter, r *http.Request) {
 }
 
 func getData(w http.ResponseWriter, r *http.Request) {
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(appData)
 	log.Printf("Request for Application data served")
@@ -64,14 +65,17 @@ func getData(w http.ResponseWriter, r *http.Request) {
 }
 
 func ping(device Device, ch chan<- Device) {
+
 	_, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
 	if err != nil {
 		ch <- Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
 	} else {
 		ch <- Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
 	}
+
 }
 func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
+
 	var result AppData
 	ch := make(chan Device)
 	for _, device := range appData.Devices {
@@ -91,7 +95,6 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	loadData()
-
 	fmt.Fprintf(w, "data Refreshed!")
-	log.Printf("data Refreshed!")
+
 }
