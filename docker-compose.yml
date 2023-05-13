@@ -16,7 +16,7 @@ services:
     network_mode: host
 
     # Use environment variable below to change port or virtual directory.
-    #environment:
-      #WOLWEBPORT: "8089"
+    environment:
+      WOLWEBPORT: "8091"
       #WOLWEBVDIR: "/wolweb"
       #WOLWEBBCASTIP: "192.168.1.255:9"

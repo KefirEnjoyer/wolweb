@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
-	"strings"
 )
 
 func loadData() {
@@ -64,47 +64,24 @@ func getData(w http.ResponseWriter, r *http.Request) {
 }
 
 func ping(device Device, ch chan<- Device) {
-	out, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
+	_, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
 	if err != nil {
 		ch <- Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
-		return
-	}
-	if strings.Contains(string(out), "1 received") {
+	} else {
 		ch <- Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
 	}
 }
 func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
-	log.Printf("updateConnectionsData started")
-
-	var resultsSynchronus AppData
-
+	var result AppData
+	ch := make(chan Device)
 	for _, device := range appData.Devices {
-		out, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
-		if err != nil {
-			a := Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
-			log.Print(device.AddressIP + "off")
-
-			resultsSynchronus.Devices = append(resultsSynchronus.Devices, a)
-		}
-		if strings.Contains(string(out), "1 received") {
-			a := Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
-			log.Print(device.AddressIP + "on")
-			resultsSynchronus.Devices = append(resultsSynchronus.Devices, a)
-
-		}
+		go ping(device, ch)
 	}
-	log.Print(resultsSynchronus)
-	//var result AppData
-	//ch := make(chan Device)
-	//for _, device := range appData.Devices {
-	//	go ping(device, ch)
-	//}
-	//for range appData.Devices {
-	//	fmt.Print(<-ch)
-	//	result.Devices = append(result.Devices, <-ch)
-	//}
-	//log.Print(result)
-	jsonData, err := json.Marshal(resultsSynchronus)
+	for range appData.Devices {
+		result.Devices = append(result.Devices, <-ch)
+	}
+	log.Print(result)
+	jsonData, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,8 +91,7 @@ func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	loadData()
-	//fmt.Fprintf(w, "data Refreshed!")
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(resultsSynchronus)
+
+	fmt.Fprintf(w, "data Refreshed!")
 	log.Printf("data Refreshed!")
 }
