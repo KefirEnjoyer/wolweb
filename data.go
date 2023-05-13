@@ -2,9 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -77,37 +76,46 @@ func ping(device Device, ch chan<- Device) {
 func updateConnectionsData(w http.ResponseWriter, r *http.Request) {
 	log.Printf("updateConnectionsData started")
 
-	ip := "192.168.1.1"
-	conn, err := net.Dial("ip4:icmp", ip)
-	if err != nil {
-		log.Println("Could not connect to host 192.168.1.1:", err)
-		os.Exit(1)
-	}
-	defer conn.Close()
-	log.Println("Connection successful!")
+	var resultsSynchronus AppData
 
-	var result AppData
-	ch := make(chan Device)
 	for _, device := range appData.Devices {
-		go ping(device, ch)
+		out, err := exec.Command("ping", "-c", "1", device.AddressIP).Output()
+		if err != nil {
+			a := Device{Connection: "off", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+			log.Print(device.AddressIP + "off")
+
+			resultsSynchronus.Devices = append(resultsSynchronus.Devices, a)
+		}
+		if strings.Contains(string(out), "1 received") {
+			a := Device{Connection: "on", AddressIP: device.AddressIP, Name: device.Name, Mac: device.Mac, BroadcastIP: device.BroadcastIP}
+			log.Print(device.AddressIP + "on")
+			resultsSynchronus.Devices = append(resultsSynchronus.Devices, a)
+
+		}
 	}
-	for range appData.Devices {
-		fmt.Print(<-ch)
-		result.Devices = append(result.Devices, <-ch)
-	}
-	log.Print(result)
-	//jsonData, err := json.Marshal(result)
-	//if err != nil {
-	//	log.Fatal(err)
+	log.Print(resultsSynchronus)
+	//var result AppData
+	//ch := make(chan Device)
+	//for _, device := range appData.Devices {
+	//	go ping(device, ch)
 	//}
+	//for range appData.Devices {
+	//	fmt.Print(<-ch)
+	//	result.Devices = append(result.Devices, <-ch)
+	//}
+	//log.Print(result)
+	jsonData, err := json.Marshal(resultsSynchronus)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// write the JSON data to a file
-	//err = ioutil.WriteFile("devices.json", jsonData, 0644)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//loadData()
+	err = ioutil.WriteFile("devices.json", jsonData, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	loadData()
 	//fmt.Fprintf(w, "data Refreshed!")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(resultsSynchronus)
 	log.Printf("data Refreshed!")
 }
